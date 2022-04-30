@@ -1,14 +1,14 @@
 {
     "develop": {
         "awscloudformation": {
-            "AuthRoleName": "trading-tools-20220430153342-authRole",
-            "UnauthRoleArn": "arn:aws:iam::352428466011:role/trading-tools-20220430153342-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::352428466011:role/trading-tools-20220430153342-authRole",
+            "AuthRoleName": "tradingtools-20220430160544-authRole",
+            "UnauthRoleArn": "arn:aws:iam::352428466011:role/tradingtools-20220430160544-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::352428466011:role/tradingtools-20220430160544-authRole",
             "Region": "ap-southeast-1",
-            "DeploymentBucketName": "trading-tools-20220430153342-deployment",
-            "UnauthRoleName": "trading-tools-20220430153342-unauthRole",
-            "StackName": "trading-tools-20220430153342",
-            "StackId": "arn:aws:cloudformation:ap-southeast-1:352428466011:stack/trading-tools-20220430153342/ea849900-c89a-11ec-8326-0af4e846a970"
+            "DeploymentBucketName": "tradingtools-20220430160544-deployment",
+            "UnauthRoleName": "tradingtools-20220430160544-unauthRole",
+            "StackName": "tradingtools-20220430160544",
+            "StackId": "arn:aws:cloudformation:ap-southeast-1:352428466011:stack/tradingtools-20220430160544/64aff090-c89f-11ec-88d2-02cdf52787f8"
         }
     }
 }
