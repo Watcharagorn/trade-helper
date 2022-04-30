@@ -37,12 +37,75 @@ import routes from "routes";
 // import bgImage from "assets/images/illustrations/illustration-reset.jpg";
 
 function PositionSizing() {
-  const positionSize = 0;
   const [success, setSuccess] = useState(false);
+  const [walletBalance, setwalletBalance] = useState(0);
+  const [riskPercent, setRiskPercent] = useState(2);
+  const [riskAmount, setRiskAmount] = useState("");
+  const [entryPrice, setEntryPrice] = useState(100);
+  const [tpPrice, setTpPrice] = useState(120);
+  const [slPrice, setSlPrice] = useState(95);
+  const [positionSize, setPositionSize] = useState(null);
+  // const portBreakPercent = 1
+  const focusAsset = 1;
+  const orderPerAsset = 1;
+
+  const calRiskAmount = () => {
+    const roundRiskAmount = Math.round(walletBalance * (riskPercent / 100));
+    setRiskAmount(roundRiskAmount);
+  };
+
+  const calPositionSize = () => {
+    const loss = entryPrice - slPrice;
+    const lossPerOrder = riskAmount / (focusAsset * orderPerAsset);
+    let size = (entryPrice / loss) * lossPerOrder;
+    size = Math.round(size);
+
+    setPositionSize(size);
+  };
 
   useEffect(() => {
     setTimeout(() => setSuccess(false), 3000);
   }, [success]);
+
+  useEffect(() => {
+    calRiskAmount();
+    calPositionSize();
+  }, [walletBalance, riskPercent, entryPrice, slPrice, riskAmount]);
+
+  const walletBalanceChangeHandler = (e) => {
+    // eslint-disable-next-line
+    const value = e.target.value;
+    setwalletBalance(value);
+    // e.preventDefault();
+  };
+
+  const entryPriceChangeHandler = (e) => {
+    // eslint-disable-next-line
+    const value = e.target.value;
+    setEntryPrice(value);
+    // e.preventDefault();
+  };
+
+  const tpPriceChangeHandler = (e) => {
+    // eslint-disable-next-line
+    const value = e.target.value;
+    setTpPrice(value);
+    // e.preventDefault();
+  };
+
+  const slPriceChangeHandler = (e) => {
+    // eslint-disable-next-line
+    const value = e.target.value;
+    setSlPrice(value);
+    // e.preventDefault();
+  };
+
+  const riskPercentChangeHandler = (e) => {
+    // eslint-disable-next-line
+    const value = e.target.value;
+    setRiskPercent(value);
+    // e.preventDefault();
+  };
 
   return (
     <>
@@ -93,6 +156,8 @@ function PositionSizing() {
                       label="Wallet's Balance"
                       InputLabelProps={{ shrink: true }}
                       type="number"
+                      onChange={walletBalanceChangeHandler}
+                      value={walletBalance}
                       fullWidth
                     />
                   </Grid>
@@ -103,11 +168,13 @@ function PositionSizing() {
                       label="Risk %"
                       placeholder="1 ~ 99"
                       InputLabelProps={{ shrink: true }}
+                      onChange={riskPercentChangeHandler}
+                      value={riskPercent}
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={6} md={6}>
-                    ~ 20 USD
+                    ~ {riskAmount} USD
                   </Grid>
                   <Grid item xs={4}>
                     <MKInput
@@ -115,6 +182,8 @@ function PositionSizing() {
                       label="Entry Point"
                       InputLabelProps={{ shrink: true }}
                       type="number"
+                      onChange={entryPriceChangeHandler}
+                      value={entryPrice}
                       fullWidth
                     />
                   </Grid>
@@ -125,6 +194,8 @@ function PositionSizing() {
                       label="TP*"
                       InputLabelProps={{ shrink: true }}
                       type="number"
+                      onChange={tpPriceChangeHandler}
+                      value={tpPrice}
                       fullWidth
                     />
                   </Grid>
@@ -135,13 +206,15 @@ function PositionSizing() {
                       label="SL**"
                       InputLabelProps={{ shrink: true }}
                       type="number"
+                      onChange={slPriceChangeHandler}
+                      value={slPrice}
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12}>
                     <div>
                       <div>
-                        Position Size:
+                        <span>Position Size:</span>
                         <b style={{ marginLeft: 5, marginRight: 10 }}>{positionSize}</b>
                         <CopyToClipboard text={positionSize}>
                           <MKButton
