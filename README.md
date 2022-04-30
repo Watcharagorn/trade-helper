@@ -92,7 +92,7 @@ The documentation for the Material Dashboard is hosted at our [website](https://
 Within the download you'll find the following directories and files:
 
 ```
-material-kit-2-react
+trading-tools
     ├── public
     │   ├── apple-icon.png
     │   ├── favicon.png
