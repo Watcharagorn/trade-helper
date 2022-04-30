@@ -119,7 +119,7 @@ function PositionSizing() {
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <c
+                    <MKInput
                       variant="standard"
                       color="success"
                       label="TP*"
