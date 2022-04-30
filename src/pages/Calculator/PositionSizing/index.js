@@ -101,6 +101,7 @@ function PositionSizing() {
                       type="number"
                       variant="standard"
                       label="Risk %"
+                      placeholder="1 ~ 99"
                       InputLabelProps={{ shrink: true }}
                       fullWidth
                     />
@@ -118,8 +119,9 @@ function PositionSizing() {
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <MKInput
+                    <c
                       variant="standard"
+                      color="success"
                       label="TP*"
                       InputLabelProps={{ shrink: true }}
                       type="number"
@@ -129,6 +131,7 @@ function PositionSizing() {
                   <Grid item xs={4}>
                     <MKInput
                       variant="standard"
+                      color="error"
                       label="SL**"
                       InputLabelProps={{ shrink: true }}
                       type="number"
