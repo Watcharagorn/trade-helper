@@ -21,7 +21,7 @@ Coded by www.creative-tim.com
 
 export default {
   background: {
-    default: "#f0f2f5",
+    default: "#153352",
   },
 
   text: {
@@ -55,7 +55,7 @@ export default {
   },
 
   info: {
-    main: "#1A73E8",
+    main: "#305b93",
     focus: "#1662C4",
   },
 
@@ -108,8 +108,8 @@ export default {
     },
 
     info: {
-      main: "#49a3f1",
-      state: "#1A73E8",
+      main: "#7ab1e1",
+      state: "#305b93",
     },
 
     success: {

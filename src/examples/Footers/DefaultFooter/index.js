@@ -31,7 +31,7 @@ function DefaultFooter({ content }) {
   const { brand, socials, menus, copyright } = content;
 
   return (
-    <MKBox component="footer">
+    <MKBox component="footer" style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }}>
       <Container>
         <Grid container spacing={3}>
           <Grid item xs={12} md={3} sx={{ ml: "auto", mb: 3 }}>

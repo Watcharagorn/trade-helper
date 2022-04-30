@@ -29,6 +29,15 @@ import Presentation from "layouts/pages/presentation";
 // Material Kit 2 React routes
 import routes from "routes";
 
+// Material Kit 2 React components
+import MKBox from "components/MKBox";
+
+// Material Kit 2 React examples
+import DefaultFooter from "examples/Footers/DefaultFooter";
+
+// Routes
+import footerRoutes from "footer.routes";
+
 export default function App() {
   const { pathname } = useLocation();
 
@@ -56,9 +65,12 @@ export default function App() {
       <CssBaseline />
       <Routes>
         {getRoutes(routes)}
-        <Route path="/presentation" element={<Presentation />} />
-        <Route path="*" element={<Navigate to="/presentation" />} />
+        <Route path="/pages/calculator/position-sizing" element={<Presentation />} />
+        <Route path="*" element={<Navigate to="/pages/calculator/position-sizing" />} />
       </Routes>
+      <MKBox pt={6} px={1} mt={6}>
+        <DefaultFooter content={footerRoutes} />
+      </MKBox>
     </ThemeProvider>
   );
 }
