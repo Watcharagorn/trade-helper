@@ -20,6 +20,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 // @mui material components
 import Grid from "@mui/material/Grid";
 // import Icon from "@mui/material/Icon";
+import Icon from "@mui/material/Icon";
 
 // Material Kit 2 React components
 import MKBox from "components/MKBox";
@@ -37,91 +38,114 @@ import routes from "routes";
 // import bgImage from "assets/images/illustrations/illustration-reset.jpg";
 
 function PositionSizing() {
+  // eslint-disable-next-line
   const [success, setSuccess] = useState(false);
   const [walletBalance, setwalletBalance] = useState(0);
   const [riskPercent, setRiskPercent] = useState(2);
   const [riskAmount, setRiskAmount] = useState("");
-  const [entryPrice, setEntryPrice] = useState(100);
+  const [entryPrice, setEntryPrice] = useState([100]);
   const [tpPrice, setTpPrice] = useState(120);
   const [slPrice, setSlPrice] = useState(95);
-  const [positionSize, setPositionSize] = useState(null);
+  const [copyStatus, setCopyStatus] = useState([false]);
+  const [orderPerAsset, setorderPerAsset] = useState(1);
   // const portBreakPercent = 1
   const focusAsset = 1;
-  const orderPerAsset = 1;
 
   const calRiskAmount = () => {
     const roundRiskAmount = Math.round(walletBalance * (riskPercent / 100));
     setRiskAmount(roundRiskAmount);
   };
 
-  const calPositionSize = () => {
-    const loss = entryPrice - slPrice;
+  const calPositionSize = (price) => {
+    const loss = price - slPrice;
     const lossPerOrder = riskAmount / (focusAsset * orderPerAsset);
-    let size = (entryPrice / loss) * lossPerOrder;
+    let size = (price / loss) * lossPerOrder;
     size = Math.round(size);
-
-    setPositionSize(size);
+    return size;
   };
 
-  useEffect(() => {
-    setTimeout(() => setSuccess(false), 3000);
-  }, [success]);
+  // useEffect(() => {
+  //   let newCopyStatus = [...copyStatus];
+  //   // eslint-disable-next-line
+  //   newCopyStatus = copyStatus.map( x => false);
+  //   setTimeout(() => setSuccess(newCopyStatus), 3000);
+  // }, [success]);
 
   useEffect(() => {
     calRiskAmount();
-    calPositionSize();
   }, [walletBalance, riskPercent, entryPrice, slPrice, riskAmount]);
 
   const walletBalanceChangeHandler = (e) => {
     // eslint-disable-next-line
     const value = e.target.value;
     setwalletBalance(value);
-    // e.preventDefault();
   };
 
-  const entryPriceChangeHandler = (e) => {
+  const entryPriceChangeHandler = (e, index) => {
     // eslint-disable-next-line
     const value = e.target.value;
-    setEntryPrice(value);
-    // e.preventDefault();
+    const newEntryPrice = [...entryPrice];
+    newEntryPrice[index] = parseInt(value, 10);
+    setEntryPrice(newEntryPrice);
   };
 
   const tpPriceChangeHandler = (e) => {
     // eslint-disable-next-line
     const value = e.target.value;
     setTpPrice(value);
-    // e.preventDefault();
   };
 
   const slPriceChangeHandler = (e) => {
     // eslint-disable-next-line
     const value = e.target.value;
     setSlPrice(value);
-    // e.preventDefault();
   };
 
   const riskPercentChangeHandler = (e) => {
     // eslint-disable-next-line
     const value = e.target.value;
     setRiskPercent(value);
-    // e.preventDefault();
+  };
+
+  const addOrder = () => {
+    const length = entryPrice.push(0);
+    setEntryPrice(entryPrice);
+    setorderPerAsset(length);
+  };
+
+  const removeOrder = (index) => {
+    const newEntryPrice = [...entryPrice];
+    newEntryPrice.splice(index, 1);
+    setorderPerAsset(newEntryPrice.length);
+    setEntryPrice(newEntryPrice);
+  };
+
+  const copySize = (index) => {
+    const newCopyStatus = [...copyStatus];
+    newCopyStatus[index] = true;
+    setCopyStatus(newCopyStatus);
+    setTimeout(() => {
+      const newCopyStatus2 = [...copyStatus];
+      newCopyStatus2.fill(false);
+      newCopyStatus2[index] = false;
+      setCopyStatus(newCopyStatus2);
+      setSuccess(newCopyStatus2);
+    }, 2000);
   };
 
   return (
     <>
-      <MKBox position="fixed" top="0.5rem" width="100%">
+      <MKBox position="fixed" top="0.5rem" width="100%" sx={{ zIndex: 100 }}>
         <DefaultNavbar routes={routes} />
       </MKBox>
-      <Grid container spacing={3} alignItems="center">
+      <Grid container spacing={3} alignItems="flex-start">
         <Grid
           item
           xs={12}
-          sm={10}
-          md={7}
-          lg={6}
+          md={5}
           xl={4}
           ml={{ xs: "auto", lg: "auto" }}
-          mr={{ xs: "auto", lg: "auto" }}
+          mr={{ xs: "auto", lg: "unset" }}
         >
           <MKBox
             bgColor="white"
@@ -130,8 +154,8 @@ function PositionSizing() {
             display="flex"
             flexDirection="column"
             justifyContent="center"
-            mt={{ xs: 20, sm: 18, md: 20 }}
-            mb={{ xs: 20, sm: 18, md: 20 }}
+            mt={{ xs: 20 }}
+            mb={{ xs: 1, sm: 2, md: 20 }}
             mx={3}
           >
             <MKBox
@@ -149,7 +173,7 @@ function PositionSizing() {
             </MKBox>
             <MKBox p={3}>
               <MKBox width="100%" component="form" method="post" autocomplete="off">
-                <Grid container spacing={3}>
+                <Grid container item xs={12} spacing={3}>
                   <Grid item xs={12}>
                     <MKInput
                       variant="standard"
@@ -179,17 +203,6 @@ function PositionSizing() {
                   <Grid item xs={4}>
                     <MKInput
                       variant="standard"
-                      label="Entry Point"
-                      InputLabelProps={{ shrink: true }}
-                      type="number"
-                      onChange={entryPriceChangeHandler}
-                      value={entryPrice}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <MKInput
-                      variant="standard"
                       color="success"
                       label="TP*"
                       InputLabelProps={{ shrink: true }}
@@ -211,33 +224,112 @@ function PositionSizing() {
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <div>
-                      <div>
-                        <span>Position Size:</span>
-                        <b style={{ marginLeft: 5, marginRight: 10 }}>{positionSize}</b>
-                        <CopyToClipboard text={positionSize}>
-                          <MKButton
-                            variant="gradient"
-                            color={success ? "success" : "warning"}
-                            size="small"
-                            // sx={{ position: "absolute", top: "0.5rem", right: "0.5rem" }}
-                            onClick={() => setSuccess(true)}
-                          >
-                            <MKBox
-                              color="white"
-                              mr={0.5}
-                              className={success ? "fa fa-check" : "fas fa-copy"}
-                            />
-                            Copy!
-                          </MKButton>
-                        </CopyToClipboard>
-                      </div>
-                    </div>
-                  </Grid>
                 </Grid>
               </MKBox>
             </MKBox>
+          </MKBox>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={5}
+          xl={4}
+          ml={{ xs: "auto", lg: "unset" }}
+          mr={{ xs: "auto", lg: "auto" }}
+        >
+          <MKBox
+            bgColor="white"
+            borderRadius="xl"
+            shadow="lg"
+            display="flex"
+            flexDirection="column"
+            mt={{ xs: 1, sm: 2, md: 20 }}
+            mb={{ xs: 1, sm: 2, md: 20 }}
+            mx={3}
+            p={3}
+          >
+            <Grid container item xs={12}>
+              <Grid container item xs={12} spacing={1}>
+                {entryPrice.map((value, index) => {
+                  const positionSize = calPositionSize(value);
+                  const elemKey = `sizeResult-${index}`;
+                  return (
+                    <Grid
+                      container
+                      item
+                      className="sizeResultContainer"
+                      key={elemKey}
+                      xs={12}
+                      spacing={1}
+                      justifyContent="flex-start"
+                      alignItems="center"
+                    >
+                      <Grid item xs={4}>
+                        <MKInput
+                          variant="standard"
+                          label={`Entry Point #${index + 1}`}
+                          InputLabelProps={{ shrink: true }}
+                          type="number"
+                          onChange={(e) => {
+                            entryPriceChangeHandler(e, index);
+                          }}
+                          value={value}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid container item xs={8} spacing={0.5}>
+                        <Grid item>
+                          <span>
+                            <small>~ Size:</small>
+                          </span>
+                          <b style={{ marginLeft: 5, marginRight: 10 }}>{positionSize}</b>
+                        </Grid>
+                        <Grid item>
+                          <Grid container spacing={0.5}>
+                            <Grid item>
+                              <CopyToClipboard text={positionSize}>
+                                <MKButton
+                                  variant="gradient"
+                                  color={copyStatus[index] ? "success" : "warning"}
+                                  size="small"
+                                  onClick={() => copySize(index)}
+                                >
+                                  <MKBox
+                                    color="white"
+                                    className={copyStatus[index] ? "fa fa-check" : "fas fa-copy"}
+                                  />
+                                </MKButton>
+                              </CopyToClipboard>
+                            </Grid>
+                            <Grid item>
+                              <MKButton
+                                variant="gradient"
+                                color="error"
+                                size="small"
+                                onClick={() => removeOrder(index)}
+                              >
+                                <Icon>delete</Icon>
+                              </MKButton>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  );
+                })}
+                <Grid item xs={12}>
+                  <MKButton
+                    size="small"
+                    color="success"
+                    onClick={() => addOrder(true)}
+                    sx={{ my: 2 }}
+                    circular
+                  >
+                    <Icon>add</Icon>&nbsp; New order
+                  </MKButton>
+                </Grid>
+              </Grid>
+            </Grid>
           </MKBox>
         </Grid>
       </Grid>
