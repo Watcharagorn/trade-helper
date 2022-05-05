@@ -149,10 +149,16 @@ function DefaultNavbarMobile({ routes, open }) {
   );
 
   return (
-    <Collapse in={Boolean(open)} timeout="auto" unmountOnExit>
-      <MKBox width="calc(100% + 1.625rem)" my={2} ml={-2}>
-        {renderNavbarItems}
-      </MKBox>
+    <Collapse
+      in={Boolean(open)}
+      timeout="auto"
+      orientation="vertical"
+      unmountOnExit
+      id="DefaultNavbarDropdown"
+    >
+      {/* <MKBox width="calc(100% + 1.625rem)" mb={2} ml={-2}> */}
+      {renderNavbarItems}
+      {/* </MKBox> */}
     </Collapse>
   );
 }

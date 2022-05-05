@@ -287,7 +287,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
       open={Boolean(dropdown)}
       placement="top-start"
       transition
-      style={{ zIndex: 10 }}
+      style={{ zIndex: 100 }}
       modifiers={[
         {
           name: "arrow",
@@ -421,7 +421,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
       open={Boolean(nestedDropdown)}
       placement="right-start"
       transition
-      style={{ zIndex: 10 }}
+      style={{ zIndex: 100 }}
       onMouseEnter={() => {
         setNestedDropdown(nestedDropdownEl);
       }}
@@ -450,19 +450,27 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   );
 
   return (
-    <Container sx={sticky ? { position: "sticky", top: 0, zIndex: 10 } : null}>
+    <Container
+      id="NavbarContainer"
+      sx={{
+        position: sticky ? "sticky" : "absolute",
+        top: 0,
+        right: 0,
+        zIndex: 100,
+        marginRight: "unset",
+      }}
+    >
       <MKBox
         py={1}
         px={{ xs: 4, sm: transparent ? 2 : 3, lg: transparent ? 0 : 2 }}
         my={relative ? 0 : 2}
-        mx={relative ? 0 : 3}
-        width={relative ? "100%" : "calc(100% - 48px)"}
+        mx={0}
+        width="100%"
         borderRadius="xl"
         shadow={transparent ? "none" : "md"}
         color={light ? "white" : "dark"}
         position={relative ? "relative" : "absolute"}
-        left={0}
-        zIndex={3}
+        zIndex={100}
         sx={({ palette: { transparent: transparentColor, white }, functions: { rgba } }) => ({
           backgroundColor: transparent ? transparentColor.main : rgba(white.main, 0.8),
           backdropFilter: transparent ? "none" : `saturate(200%) blur(30px)`,
@@ -525,10 +533,11 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
           <MKBox
             display={{ xs: "inline-block", lg: "none" }}
             lineHeight={0}
-            py={1.5}
-            pl={1.5}
+            m={-1.5}
+            p={1.5}
             color={transparent ? "white" : "inherit"}
-            sx={{ cursor: "pointer" }}
+            bgColor="dark"
+            sx={{ cursor: "pointer", borderRadius: "100%" }}
             onClick={openMobileNavbar}
           >
             <Icon fontSize="default">{mobileNavbar ? "close" : "menu"}</Icon>

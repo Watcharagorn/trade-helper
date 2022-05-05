@@ -50,6 +50,7 @@ function PositionSizing() {
   const [orderPerAsset, setorderPerAsset] = useState(1);
   // const portBreakPercent = 1
   const focusAsset = 1;
+  let totalProfit = 0;
 
   const calRiskAmount = () => {
     const roundRiskAmount = Math.round(walletBalance * (riskPercent / 100));
@@ -64,12 +65,15 @@ function PositionSizing() {
     return size;
   };
 
-  // useEffect(() => {
-  //   let newCopyStatus = [...copyStatus];
-  //   // eslint-disable-next-line
-  //   newCopyStatus = copyStatus.map( x => false);
-  //   setTimeout(() => setSuccess(newCopyStatus), 3000);
-  // }, [success]);
+  const calTotalProfit = () => {
+    const sumCumu = 0;
+    const sumResult = entryPrice.reduce((prev, current) => {
+      const profit = ((tpPrice - current) / current) * calPositionSize(current);
+      return prev + profit;
+    }, sumCumu);
+    totalProfit = sumResult;
+    return sumResult;
+  };
 
   useEffect(() => {
     calRiskAmount();
@@ -135,17 +139,15 @@ function PositionSizing() {
 
   return (
     <>
-      <MKBox position="fixed" top="0.5rem" width="100%" sx={{ zIndex: 100 }}>
-        <DefaultNavbar routes={routes} />
-      </MKBox>
-      <Grid container spacing={3} alignItems="flex-start">
+      <DefaultNavbar routes={routes} brand="" transparent sticky light />
+      <Grid container spacing={1} alignItems="flex-start">
         <Grid
           item
           xs={12}
           md={5}
           xl={4}
           ml={{ xs: "auto", lg: "auto" }}
-          mr={{ xs: "auto", lg: "unset" }}
+          mr={{ xs: "auto", md: "unset" }}
         >
           <Grid
             id="setupForm"
@@ -161,7 +163,7 @@ function PositionSizing() {
               display="flex"
               flexDirection="column"
               justifyContent="center"
-              mt={{ xs: 20 }}
+              mt={5.5}
               mb={1}
               mx={3}
             >
@@ -273,7 +275,7 @@ function PositionSizing() {
                         <Grid item xs={4}>
                           <MKInput
                             variant="standard"
-                            label={`Entry Point #${index + 1}`}
+                            label={`Entry Price #${index + 1}`}
                             InputLabelProps={{ shrink: true }}
                             type="number"
                             onChange={(e) => {
@@ -343,8 +345,8 @@ function PositionSizing() {
           item
           xs={12}
           md={5}
-          xl={4}
-          ml={{ xs: "auto", lg: "unset" }}
+          xl={2}
+          ml={{ xs: "auto", md: "unset" }}
           mr={{ xs: "auto", lg: "auto" }}
         >
           <Grid
@@ -361,7 +363,7 @@ function PositionSizing() {
               display="flex"
               flexDirection="column"
               justifyContent="center"
-              mt={{ xs: 20 }}
+              mt={{ xs: 2, md: 5.5 }}
               mb={{ xs: 1, sm: 2, md: 20 }}
               mx={3}
             >
@@ -381,7 +383,24 @@ function PositionSizing() {
               <MKBox p={3}>
                 <Grid container>
                   <Grid item>
-                    <h3>Total Profit: XXX</h3>
+                    <MKTypography variant="h3" color="success">
+                      <small>Total Profit:&nbsp;</small>
+                      <strong>{calTotalProfit()}</strong>
+                    </MKTypography>
+                    <MKTypography
+                      variant="h5"
+                      color="error"
+                      sx={{ borderBottom: "1px solid lightgray" }}
+                      mb={2}
+                    >
+                      <small>Total Loss:&nbsp;</small>
+                      <strong>{riskAmount}</strong>
+                    </MKTypography>
+                    {/* prettier-ignore */}
+                    <h5>
+                      <small>Risk & Reward Ratio:&nbsp;</small>
+                      <strong>{totalProfit / riskAmount}</strong>
+                    </h5>
                   </Grid>
                 </Grid>
               </MKBox>
